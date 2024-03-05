@@ -13,7 +13,6 @@ ui <- fluidPage(
   sidebarLayout(
     # Sidebar content
     sidebarPanel(
-      tags$h3("Who's gayer?"), width = 2,
       
       # selector for A
       numericInput(
@@ -49,10 +48,11 @@ ui <- fluidPage(
     
     # Main panel
     mainPanel(
-      width = 10,
-      plotOutput("plot"),
+      width = 8,
+      tags$h3("Who's gayer?"),
       br(),
-      textOutput("results")
+      textOutput("results"),
+      plotOutput("plot")
     )
   )
 )
@@ -94,11 +94,20 @@ server <- function(input, output, session) {
   output$plot <- renderPlot({
     # Parameters for the first normal distribution
     mu1 <- 100*a_yes()/a_n()     # Mean
-    sigma1 <- 100*sqrt((a_yes() / a_n()) * (1 - (a_yes() / a_n()))/a_n())  # Standard deviation
-
+    if (mu1 %in% c(0,100)) {
+      sigma1 <- 100*sqrt(.00001*(1-(.00001))/a_n())
+    } else {
+      sigma1 <- 100*sqrt((a_yes() / a_n()) * (1 - (a_yes() / a_n()))/a_n())  # Standard deviation
+    }
+    
     # Parameters for the second normal distribution
     mu2 <- 100*b_yes()/b_n()     # Mean
-    sigma2 <- 100*sqrt((b_yes()/b_n())*(1-(b_yes()/b_n()))/b_n())  # Standard deviation
+    if (mu2 %in% c(0,100)) {
+      sigma2 <- 100*sqrt(.00001*(1-(.00001))/b_n()) # adjust to ~ 0
+    } else {
+      sigma2 <- 100*sqrt((b_yes()/b_n())*(1-(b_yes()/b_n()))/b_n())  # Standard deviation
+    }
+    
 
     # Generate x values
     x <- seq(-50, 150, length.out = 1000)
