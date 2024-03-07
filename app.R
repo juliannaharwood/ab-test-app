@@ -49,10 +49,15 @@ ui <- fluidPage(
     # Main panel
     mainPanel(
       width = 8,
-      tags$h3("Who's gayer?"),
+      tags$h2("Who's gayer?"),
       br(),
       textOutput("results"),
-      plotOutput("plot")
+      plotOutput("plot"),
+      tags$style(HTML("
+      #results {
+      font-size: 20px; /* Adjust the font size as needed */
+    }
+  "))
     )
   )
 )
@@ -119,15 +124,15 @@ server <- function(input, output, session) {
     # Plot the first normal distribution
     plot(x, pdf1, type = "l", ylim = c(0, max(pdf1, pdf2)),
          main = "Results",
-         xlab = "Number of People Voting Yes", ylab = "Don't Worry About It",
-         col = "blue", lwd = 2)
+         xlab = "Number of People Voting Gay", ylab = "Don't Worry About It",
+         col = "blue", lwd = 2, cex.main = 1.5, cex.lab = 1.5)
 
     # Add the second normal distribution to the plot
     lines(x, pdf2, col = "red", lwd = 2)
 
     # Add a legend
     legend("topright", legend = c("Celeb A", "Celeb B"),
-           col = c("blue", "red"), lwd = 2, cex = 0.8)
+           col = c("blue", "red"), lwd = 2, cex = 1.5)
   })
   
 }
